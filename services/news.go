@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/aldinofrizal/soompi-colly-scrap/config"
@@ -18,11 +19,11 @@ type News struct {
 }
 
 func GetNews() ([]*pb.Item, error) {
+	fmt.Println("get news is called ----")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	var newsList []*pb.Item
 	defer cancel()
-	client := config.InitDatabase()
-	newsCol := client.Database("soompi").Collection("tvnews")
+	newsCol := config.DB.Database("soompi").Collection("tvnews")
 
 	cur, err := newsCol.Find(context.Background(), bson.M{})
 	if err != nil {

@@ -10,7 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func InitDatabase() *mongo.Client {
+var DB *mongo.Client
+
+func InitDatabase() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -25,5 +27,5 @@ func InitDatabase() *mongo.Client {
 	}
 
 	fmt.Println("connected to mongodb")
-	return client
+	DB = client
 }

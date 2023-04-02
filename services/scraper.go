@@ -8,6 +8,7 @@ import (
 
 	"github.com/aldinofrizal/soompi-colly-scrap/config"
 	"github.com/gocolly/colly"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 func Scrap() {
@@ -15,8 +16,12 @@ func Scrap() {
 		colly.AllowedDomains("www.soompi.com"),
 	)
 
-	client := config.InitDatabase()
-	newsCol := client.Database("soompi").Collection("tvnews")
+	newsCol := config.DB.Database("soompi").Collection("tvnews")
+
+	_, err := newsCol.DeleteMany(context.TODO(), bson.D{})
+	if err != nil {
+		panic(err)
+	}
 
 	c.OnHTML(".thumbnail-wrapper a", func(h *colly.HTMLElement) {
 		title := h.Attr("title")
@@ -29,13 +34,8 @@ func Scrap() {
 			log.Fatal(err)
 		} else {
 			fmt.Println("news inserted")
-			fmt.Println(news)
 		}
 	})
 
 	c.Visit("https://www.soompi.com/category/tvfilm")
-}
-
-func PullData() {
-
 }
