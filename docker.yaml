@@ -1,0 +1,24 @@
+version: '3'
+
+volumes:
+  mongovolume:
+
+services:
+  scrapp-app:
+    build: .
+    depends_on:
+      - mongodb
+    ports:
+      - 9000:9000
+    environment:
+      - MONGO_URL=mongodb://mongo:mongo@mongodb
+
+  mongodb:
+    image: mongo
+    ports: 
+      - 27018:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+    volumes:
+      - mongovolume:/data/db
